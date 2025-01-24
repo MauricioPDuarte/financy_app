@@ -13,10 +13,16 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   flutter_modular: ^6.3.4
+  animate_do: ^3.3.4
+  mocktail: ^1.0.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  integration_test:
+    sdk: flutter
+
 
   flutter_lints: ^5.0.0
 
