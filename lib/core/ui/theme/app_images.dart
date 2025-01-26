@@ -17,12 +17,14 @@ extension AppImagesExt on String {
     double? height,
     BoxFit? fit,
     VoidCallback? onTap,
+    Animation<double>? opacity,
   }) {
     return InkWell(
       onTap: onTap,
       child: Image.asset(
         this,
         width: width,
+        opacity: opacity,
         height: height,
         fit: fit,
       ),

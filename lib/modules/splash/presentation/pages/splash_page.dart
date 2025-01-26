@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:financy_app/modules/onboarding/onboarding_routes.dart';
-import 'package:financy_app/theme/app_colors.dart';
-import 'package:financy_app/theme/app_typography.dart';
+import 'package:financy_app/core/ui/theme/app_colors.dart';
+import 'package:financy_app/core/ui/theme/app_typography.dart';
+import 'package:financy_app/modules/splash/presentation/controllers/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -13,12 +13,13 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final SplashController controller = Modular.get();
+
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5)).then(
-        (_) => Modular.to.pushReplacementNamed(OnboardingRoutes.onboarding));
+    controller.init();
   }
 
   @override

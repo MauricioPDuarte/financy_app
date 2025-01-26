@@ -1,5 +1,7 @@
+import 'package:financy_app/core/ui/theme/app_colors.dart';
 import 'package:financy_app/modules/shared/presentation/widgets/app_input_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -115,5 +117,114 @@ void main() {
       expect(iconVisibility, findsNothing);
       expect(iconVisibilityOff, findsNothing);
     });
+  });
+
+  testWidgets('Deve exibir erro quando a validação falhar', (tester) async {
+    const errorMessage = 'Campo obrigatório';
+    var formKey = GlobalKey<FormState>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: Form(
+              key: formKey,
+              child: AppInputWidget(
+                validator: (value) =>
+                    value == null || value.isEmpty ? errorMessage : null,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Aciona a validação
+    await tester.enterText(find.byType(TextFormField), '');
+    formKey.currentState?.validate();
+    await tester.pumpAndSettle();
+
+    expect(find.text(errorMessage), findsOneWidget);
+  });
+
+  testWidgets('Deve aplicar os inputFormatters corretamente', (tester) async {
+    final controller = TextEditingController();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: AppInputWidget(
+              controller: controller,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextField), 'abc123');
+    expect(controller.text, '123');
+  });
+
+  testWidgets('Deve desativar o campo quando enabled for false',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: AppInputWidget(
+              enabled: false,
+              hint: 'Desabilitado',
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final textField = find.byType(TextField);
+    expect(tester.widget<TextField>(textField).enabled, isFalse);
+
+    await tester.enterText(textField, 'Texto');
+    expect(find.text('Texto'), findsNothing); // Não insere texto
+  });
+
+  testWidgets('Deve exibir o helperText corretamente', (tester) async {
+    const helperText = 'Isso é um texto de ajuda';
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: AppInputWidget(
+              helperText: helperText,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text(helperText), findsOneWidget);
+  });
+
+  testWidgets('Deve aplicar a borda correta ao ganhar foco', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: AppInputWidget(
+              hint: 'Teste borda',
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final textField = find.byType(TextField);
+    await tester.tap(textField);
+    await tester.pumpAndSettle();
+
+    final inputDecoration = tester.widget<TextField>(textField).decoration;
+    expect(inputDecoration?.focusedBorder?.borderSide.color, AppColors.primary);
   });
 }

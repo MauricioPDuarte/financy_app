@@ -1,3 +1,4 @@
+import 'package:financy_app/core/ui/theme/app_colors.dart';
 import 'package:financy_app/modules/shared/presentation/widgets/app_social_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +10,7 @@ class MockFunction extends Mock {
 
 void main() {
   group('Test AppSocialButtonWidget', () {
-    testWidgets('Renderizou como Facebook', (tester) async {
+    testWidgets('Deve renderizou com o visual Facebook', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
           body: AppSocialButtonWidget(
@@ -22,7 +23,7 @@ void main() {
       expect(find.text('Entrar com Facebook'), findsOneWidget);
     });
 
-    testWidgets('Renderizou como Google', (tester) async {
+    testWidgets('Deve renderizou com o visual Google', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
           body: AppSocialButtonWidget(
@@ -35,7 +36,7 @@ void main() {
       expect(find.text('Entrar com Google'), findsOneWidget);
     });
 
-    testWidgets('Respondeu ao pressionar', (tester) async {
+    testWidgets('Deve responder ao pressionar o onPressed', (tester) async {
       bool wasPressed = false;
 
       await tester.pumpWidget(MaterialApp(
@@ -56,7 +57,7 @@ void main() {
       expect(wasPressed, isTrue);
     });
 
-    testWidgets('Loading está aparecendo', (tester) async {
+    testWidgets('Deve apresentar o loading corretamente', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
           body: SafeArea(
@@ -74,7 +75,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('OnPressed não pode ser chamado com loading ativado',
+    testWidgets('Deve ignorar o OnPresse quando o loading estiver ativo',
         (tester) async {
       bool wasPressed = false;
 
@@ -95,6 +96,46 @@ void main() {
       await tester.pump();
 
       expect(wasPressed, isFalse);
+    });
+
+    testWidgets('Deve alterar o estilo quando desabilitado (Google)',
+        (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: AppSocialButtonWidget(
+              platform: SocialPlatforms.google,
+              enabled: false,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ));
+
+      final buttonFinder = find.byType(ElevatedButton);
+      final buttonStyle = tester.widget<ElevatedButton>(buttonFinder).style;
+      expect(buttonStyle?.backgroundColor?.resolve({WidgetState.disabled}),
+          AppColors.inputBorderDisabled.withValues(alpha: 0.2));
+    });
+
+    testWidgets('Deve alterar o estilo quando desabilitado (Facebook)',
+        (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: SafeArea(
+            child: AppSocialButtonWidget(
+              platform: SocialPlatforms.facebook,
+              enabled: false,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ));
+
+      final buttonFinder = find.byType(ElevatedButton);
+      final buttonStyle = tester.widget<ElevatedButton>(buttonFinder).style;
+      expect(buttonStyle?.backgroundColor?.resolve({WidgetState.disabled}),
+          AppColors.facebook.withValues(alpha: 0.6));
     });
   });
 }

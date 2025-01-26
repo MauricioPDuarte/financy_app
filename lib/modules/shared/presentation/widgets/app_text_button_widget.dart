@@ -1,5 +1,5 @@
-import 'package:financy_app/theme/app_colors.dart';
-import 'package:financy_app/theme/app_typography.dart';
+import 'package:financy_app/core/ui/theme/app_colors.dart';
+import 'package:financy_app/core/ui/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 
 class AppTextButtonWidget extends StatelessWidget {
@@ -26,7 +26,7 @@ class AppTextButtonWidget extends StatelessWidget {
         child: Text(
           text,
           style: AppTypography.inter600
-              .copyWith(color: AppColors.blue100, fontSize: 14),
+              .copyWith(color: AppColors.primary, fontSize: 14),
         ));
   }
 }

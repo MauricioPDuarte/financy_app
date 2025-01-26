@@ -1,6 +1,6 @@
 import 'package:financy_app/modules/shared/shared_keys.dart';
-import 'package:financy_app/theme/app_colors.dart';
-import 'package:financy_app/theme/app_typography.dart';
+import 'package:financy_app/core/ui/theme/app_colors.dart';
+import 'package:financy_app/core/ui/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -35,7 +35,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: title != null ? titleWidget : null,
       centerTitle: true,
-      automaticallyImplyLeading: false,
+      forceMaterialTransparency: true,
       leading: showLeading ? leadingWidget : null,
     );
   }

@@ -3,8 +3,8 @@ import 'package:financy_app/modules/shared/presentation/widgets/app_button_widge
 import 'package:financy_app/modules/shared/presentation/widgets/app_text_button_widget.dart';
 import 'package:financy_app/modules/sign_in/sign_in_routes.dart';
 import 'package:financy_app/modules/sign_up/sign_up_routes.dart';
-import 'package:financy_app/theme/app_colors.dart';
-import 'package:financy_app/theme/app_typography.dart';
+import 'package:financy_app/core/ui/theme/app_colors.dart';
+import 'package:financy_app/core/ui/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
