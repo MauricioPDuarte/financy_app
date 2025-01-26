@@ -196,7 +196,7 @@ void main() {
                 password: 'password123',
               ))
           .thenThrow(FirebaseAuthException(
-              message: 'Erro no cadastro', code: 'email-already-exists'));
+              message: 'Erro no cadastro', code: 'email-already-in-use'));
 
       // Chamando o método e verificando se lança a exceção esperada
       expect(
@@ -204,7 +204,7 @@ void main() {
                 email: 'test@test.com',
                 password: 'password123',
               ),
-          throwsA(isA<SignUpEmailAlreadyExistsFailure>()));
+          throwsA(isA<SignUpEmailAlreadyInUseFailure>()));
 
       // Verifica se o método foi chamado
       verify(() => auth.createUserWithEmailAndPassword(

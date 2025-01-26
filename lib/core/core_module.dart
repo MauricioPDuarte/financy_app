@@ -12,12 +12,11 @@ class CoreModule extends Module {
   @override
   void exportedBinds(Injector i) {
     // Services
-    i.addLazySingleton(() => InternetConnectionChecker.instance);
-    i.addLazySingleton<AuthService>(
-        () => FirebaseAuthServiceImpl(auth: FirebaseAuth.instance));
-    i.addLazySingleton<NetworkInfo>(
-        () => NetworkInfoImpl(internetConnectionChecker: i.get()));
-    i.addLazySingleton<SessionService>(() => SessionServiceImpl());
+    i.addInstance(InternetConnectionChecker.instance);
+    i.addInstance(FirebaseAuth.instance);
+    i.addLazySingleton<AuthService>(FirebaseAuthServiceImpl.new);
+    i.addLazySingleton<NetworkInfo>(NetworkInfoImpl.new);
+    i.addLazySingleton<SessionService>(SessionServiceImpl.new);
 
     super.exportedBinds(i);
   }

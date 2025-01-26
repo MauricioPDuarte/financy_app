@@ -1,4 +1,4 @@
-import 'package:financy_app/core/code_module.dart';
+import 'package:financy_app/core/core_module.dart';
 import 'package:financy_app/modules/shared/data/datasouces/impl/shared_local_datasource_impl.dart';
 import 'package:financy_app/modules/shared/data/datasouces/shared_local_datasource.dart';
 import 'package:financy_app/modules/shared/data/repositories/shared_local_repository_impl.dart';
@@ -13,21 +13,21 @@ class SharedModule extends Module {
   List<Module> get imports => [CoreModule()];
 
   @override
-  void binds(Injector i) {
+  void exportedBinds(Injector i) {
     // Datasource
-    i.addLazySingleton<SharedLocalDatasource>(
-        () => SharedLocalDatasourceImpl(sessionService: i.get()));
+    i.addLazySingleton<SharedLocalDatasource>(SharedLocalDatasourceImpl.new);
 
     // Repositories
-    i.addLazySingleton<SharedLocalRepository>(
-        () => SharedLocalRepositoryImpl(datasource: i.get()));
+    i.addLazySingleton<SharedLocalRepository>(SharedLocalRepositoryImpl.new);
 
     // UseCases
     i.addLazySingleton<SharedSetLoggedUserUsecase>(
-        () => SharedSetLoggedUserUsecaseImpl(repository: i.get()));
+        SharedSetLoggedUserUsecaseImpl.new);
     i.addLazySingleton<SharedGetLoggedUserUsecase>(
-        () => SharedGetLoggedUserUsecaseImpl(repository: i.get()));
+        SharedGetLoggedUserUsecaseImpl.new);
     i.addLazySingleton<SharedLogoutUserUsecase>(
-        () => SharedLogoutUserUsecaseImpl(repository: i.get()));
+        SharedLogoutUserUsecaseImpl.new);
+
+    super.exportedBinds(i);
   }
 }

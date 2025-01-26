@@ -1,4 +1,4 @@
-import 'package:financy_app/core/code_module.dart';
+import 'package:financy_app/core/core_module.dart';
 import 'package:financy_app/modules/shared/shared_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 

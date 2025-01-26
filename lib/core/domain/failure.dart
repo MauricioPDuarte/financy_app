@@ -36,11 +36,11 @@ class SignUpFailure extends Failure {
             'Ocorreu um erro ao criar sua conta na plataforma Visia. Por favor, tente novamente.';
 }
 
-class SignUpEmailAlreadyExistsFailure extends Failure {
+class SignUpEmailAlreadyInUseFailure extends Failure {
   @override
   final String msg;
 
-  SignUpEmailAlreadyExistsFailure({String? msg})
+  SignUpEmailAlreadyInUseFailure({String? msg})
       : msg = msg ??
             'O email informado já esta em uso. Por favor, informe outro email.';
 }
@@ -61,6 +61,15 @@ class SignInFailure extends Failure {
   SignInFailure({String? msg})
       : msg = msg ??
             'Ocorreu um erro ao tentar acessar sua conta na plataforma Visia. Por favor, tente novamente.';
+}
+
+class SignInAccountAlreadyExistsFailure extends Failure {
+  @override
+  final String msg;
+
+  SignInAccountAlreadyExistsFailure({String? msg})
+      : msg = msg ??
+            'Já foi criado uma conta com esse email a partir de outra plataforma social. Por favor, tente novamente.';
 }
 
 class SignInUserNotFoundFailure extends Failure {

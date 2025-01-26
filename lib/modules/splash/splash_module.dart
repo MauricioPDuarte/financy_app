@@ -7,13 +7,13 @@ class SplashModule extends BaseModule {
   @override
   void binds(i) {
     // Controllers
-    i.add<SplashController>(() => SplashControllerImpl(
-          getLoggedUserUsecase: i.get(),
-        ));
+    i.add<SplashController>(SplashControllerImpl.new);
+    super.binds(i);
   }
 
   @override
   void routes(r) {
     r.child(Modular.initialRoute, child: (context) => SplashPage());
+    super.routes(r);
   }
 }

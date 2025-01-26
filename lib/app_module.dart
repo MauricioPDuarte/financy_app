@@ -7,14 +7,12 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class AppModule extends Module {
   @override
-  void exportedBinds(Injector i) {}
-
-  @override
   void routes(r) {
     r.module(Modular.initialRoute, module: SplashModule());
     r.module(Modular.initialRoute, module: OnboardingModule());
     r.module(Modular.initialRoute, module: SignInModule());
     r.module(Modular.initialRoute, module: SignUpModule());
     r.module(Modular.initialRoute, module: BoxModule());
+    super.routes(r);
   }
 }

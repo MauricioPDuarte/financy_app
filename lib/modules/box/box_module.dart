@@ -7,12 +7,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 class BoxModule extends BaseModule {
   @override
   void binds(Injector i) {
-    i.add<ListBoxesController>(
-        () => ListBoxesControllerImpl(logoutUserUsecase: i.get()));
+    i.add<ListBoxesController>(ListBoxesControllerImpl.new);
+    super.binds(i);
   }
 
   @override
   void routes(RouteManager r) {
     r.child(BoxRoutes.listBoxes, child: (context) => ListBoxesPage());
+    super.routes(r);
   }
 }

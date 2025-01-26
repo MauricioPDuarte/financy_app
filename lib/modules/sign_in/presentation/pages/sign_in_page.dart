@@ -69,13 +69,13 @@ class _SignInPageState extends State<SignInPage> {
             AppSocialButtonWidget(
               platform: SocialPlatforms.facebook,
               enabled: !controller.signInIsLoading,
-              onPressed: () {},
+              onPressed: () => controller.signInWithFacebook(),
             ),
             const SizedBox(height: 12),
             AppSocialButtonWidget(
               platform: SocialPlatforms.google,
               enabled: !controller.signInIsLoading,
-              onPressed: () {},
+              onPressed: () => controller.signInWithGoogle(),
             ),
             const SizedBox(height: 18),
             RichText(

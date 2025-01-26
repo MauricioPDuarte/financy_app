@@ -13,26 +13,23 @@ class SignUpModule extends BaseModule {
   @override
   void binds(i) {
     // Datasource
-    i.addLazySingleton<SignUpDatasource>(
-        () => SignUpDatasourceImpl(authService: i.get()));
+    i.addLazySingleton<SignUpDatasource>(SignUpDatasourceImpl.new);
 
     // Repositories
-    i.addLazySingleton<SignUpRepository>(
-        () => SignUpRepositoryImpl(datasource: i.get(), networkInfo: i.get()));
+    i.addLazySingleton<SignUpRepository>(SignUpRepositoryImpl.new);
 
     // UseCases
-    i.addLazySingleton<SignUpUseCase>(
-        () => SignUpUseCaseImpl(repository: i.get()));
+    i.addLazySingleton<SignUpUseCase>(SignUpUseCaseImpl.new);
 
     // Controllers
-    i.add<SignUpController>(() => SignUpControllerImpl(
-          signUpUseCase: i.get(),
-          setLoggedUserUsecase: i.get(),
-        ));
+    i.add<SignUpController>(SignUpControllerImpl.new);
+
+    super.binds(i);
   }
 
   @override
   void routes(r) {
     r.child(SignUpRoutes.signUp, child: (context) => SignUpPage());
+    super.routes(r);
   }
 }
