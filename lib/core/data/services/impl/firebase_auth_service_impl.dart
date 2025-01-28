@@ -9,9 +9,15 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthServiceImpl implements AuthService {
-  final FirebaseAuth auth;
+  final FirebaseAuth firebaseAuth;
+  final GoogleSignIn googleSignIn;
+  final WrapperGoogleGetCredentials googleGetCredentials;
 
-  FirebaseAuthServiceImpl({required this.auth});
+  FirebaseAuthServiceImpl({
+    required this.firebaseAuth,
+    required this.googleSignIn,
+    required this.googleGetCredentials,
+  });
 
   @override
   Future<UserModel> signIn({
@@ -19,7 +25,7 @@ class FirebaseAuthServiceImpl implements AuthService {
     required String password,
   }) async {
     try {
-      final result = await auth.signInWithEmailAndPassword(
+      final result = await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -51,7 +57,7 @@ class FirebaseAuthServiceImpl implements AuthService {
     required String password,
   }) async {
     try {
-      final result = await auth.createUserWithEmailAndPassword(
+      final result = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       if (result.user == null) throw SignUpFailure();
@@ -80,7 +86,7 @@ class FirebaseAuthServiceImpl implements AuthService {
   @override
   Future<void> signOut() async {
     try {
-      await auth.signOut();
+      await firebaseAuth.signOut();
     } on FirebaseAuthException catch (e) {
       throw SignOutFailure(msg: e.message);
     } catch (e) {
@@ -91,21 +97,20 @@ class FirebaseAuthServiceImpl implements AuthService {
   @override
   Future<UserModel> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
 
       // Create a new credential
-      final credential = GoogleAuthProvider.credential(
+      final credential = googleGetCredentials.credientials(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
 
       // Once signed in, return the UserCredential
-      final result =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final result = await firebaseAuth.signInWithCredential(credential);
 
       if (result.user == null) {
         throw SignInFailure();
@@ -164,8 +169,8 @@ class FirebaseAuthServiceImpl implements AuthService {
       }
 
       // Once signed in, return the UserCredential
-      var result = await FirebaseAuth.instance
-          .signInWithCredential(facebookAuthCredential);
+      var result =
+          await firebaseAuth.signInWithCredential(facebookAuthCredential);
 
       if (result.user == null) {
         throw SignInFailure();
@@ -186,4 +191,12 @@ class FirebaseAuthServiceImpl implements AuthService {
       throw SignInFailure(msg: e.toString());
     }
   }
+}
+
+class WrapperGoogleGetCredentials {
+  OAuthCredential credientials({String? accessToken, String? idToken}) =>
+      GoogleAuthProvider.credential(
+        accessToken: accessToken,
+        idToken: idToken,
+      );
 }

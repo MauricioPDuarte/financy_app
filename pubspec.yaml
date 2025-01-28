@@ -28,6 +28,7 @@ dependencies:
   google_sign_in_ios: ^5.7.8
   nonce: ^1.2.0
   crypto: ^3.0.6
+  google_sign_in_mocks: ^0.3.0
 
 dev_dependencies:
   flutter_test:

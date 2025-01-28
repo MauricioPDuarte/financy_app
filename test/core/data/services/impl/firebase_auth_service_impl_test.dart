@@ -3,25 +3,54 @@ import 'package:financy_app/core/data/services/impl/firebase_auth_service_impl.d
 import 'package:financy_app/core/domain/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockUserCredential extends Mock implements UserCredential {}
 
+class MockGoogleSignInAccount extends Mock implements GoogleSignInAccount {}
+
+class MockGoogleAuthProvider extends Mock implements AuthProvider {}
+
+class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
+class MockWrapperGoogleGetCredentials extends Mock
+    implements WrapperGoogleGetCredentials {}
+
+class MockGoogleSignInAuthentication extends Mock
+    implements GoogleSignInAuthentication {}
+
 class MockUser extends Mock implements User {}
+
+class MockOAuthCredentials extends Mock implements OAuthCredential {}
 
 void main() {
   late MockFirebaseAuth auth;
   late MockUserCredential userCredential;
+  late MockGoogleSignInAccount googleSignInAccount;
+  late MockGoogleSignInAuthentication googleSignInAuthentication;
   late FirebaseAuthServiceImpl firebaseAuthService;
   late MockUser user;
+  late GoogleSignIn googleSignIn;
+  late MockWrapperGoogleGetCredentials googleGetCredentials;
+  late MockOAuthCredentials oAuthCredentials;
 
   setUp(() {
     auth = MockFirebaseAuth();
     userCredential = MockUserCredential();
     user = MockUser();
-    firebaseAuthService = FirebaseAuthServiceImpl(auth: auth);
+    googleSignIn = MockGoogleSignIn();
+    googleGetCredentials = MockWrapperGoogleGetCredentials();
+    firebaseAuthService = FirebaseAuthServiceImpl(
+      firebaseAuth: auth,
+      googleSignIn: googleSignIn,
+      googleGetCredentials: googleGetCredentials,
+    );
+    googleSignInAccount = MockGoogleSignInAccount();
+    googleSignInAuthentication = MockGoogleSignInAuthentication();
+    oAuthCredentials = MockOAuthCredentials();
   });
 
   group('signIn', () {
@@ -267,6 +296,106 @@ void main() {
 
       // Verifica se o método foi chamado
       verify(() => auth.signOut()).called(1);
+    });
+  });
+
+  group('signInWithGoogle', () {
+    test('Deve retornar um UserModel com sucesso', () async {
+      when(() => googleSignIn.signIn())
+          .thenAnswer((_) async => googleSignInAccount);
+
+      when(() => googleSignInAccount.authentication)
+          .thenAnswer((_) async => googleSignInAuthentication);
+
+      when(() => googleSignInAuthentication.accessToken).thenReturn('123');
+      when(() => googleSignInAuthentication.idToken).thenReturn('321');
+
+      when(() => googleGetCredentials.credientials(
+          accessToken: '123', idToken: '321')).thenReturn(oAuthCredentials);
+
+      when(() => oAuthCredentials.accessToken).thenReturn('123');
+      when(() => oAuthCredentials.idToken).thenReturn('321');
+
+      when(() => auth.signInWithCredential(oAuthCredentials))
+          .thenAnswer((_) async => userCredential);
+
+      when(() => userCredential.user).thenReturn(user);
+      when(() => user.uid).thenReturn('user-id');
+      when(() => user.email).thenReturn('test@test.com');
+      when(() => user.displayName).thenReturn('Test User');
+
+      // ACOES
+      final result = await firebaseAuthService.signInWithGoogle();
+
+      // Verificações
+      expect(result, isA<UserModel>());
+      expect(result.id, 'user-id');
+      expect(result.email, 'test@test.com');
+      expect(result.fullName, 'Test User');
+      expect(googleSignInAuthentication.accessToken, '123');
+      expect(googleSignInAuthentication.idToken, '321');
+      expect(oAuthCredentials.accessToken, '123');
+      expect(oAuthCredentials.idToken, '321');
+
+      verify(() => googleSignIn.signIn()).called(1);
+      verify(() => googleGetCredentials.credientials(
+          accessToken: '123', idToken: '321')).called(1);
+      verify(() => auth.signInWithCredential(oAuthCredentials)).called(1);
+    });
+
+    test('Deve retornar um SignInFailure quando não encontrar o usuário',
+        () async {
+      when(() => googleSignIn.signIn())
+          .thenAnswer((_) async => googleSignInAccount);
+
+      when(() => googleSignInAccount.authentication)
+          .thenAnswer((_) async => googleSignInAuthentication);
+
+      when(() => googleSignInAuthentication.accessToken).thenReturn('123');
+      when(() => googleSignInAuthentication.idToken).thenReturn('321');
+
+      when(() => googleGetCredentials.credientials(
+          accessToken: '123', idToken: '321')).thenReturn(oAuthCredentials);
+
+      when(() => oAuthCredentials.accessToken).thenReturn('123');
+      when(() => oAuthCredentials.idToken).thenReturn('321');
+
+      when(() => auth.signInWithCredential(oAuthCredentials))
+          .thenAnswer((_) async => userCredential);
+
+      when(() => userCredential.user).thenReturn(null);
+
+      // ACOES
+      expect(() => firebaseAuthService.signInWithGoogle(),
+          throwsA(isA<SignInFailure>()));
+
+      verify(() => googleSignIn.signIn()).called(1);
+    });
+
+    test('Deve retornar um SignInFailure caso ocorra um exceção', () async {
+      when(() => googleSignIn.signIn())
+          .thenAnswer((_) async => googleSignInAccount);
+
+      when(() => googleSignInAccount.authentication)
+          .thenAnswer((_) async => googleSignInAuthentication);
+
+      when(() => googleSignInAuthentication.accessToken).thenReturn('123');
+      when(() => googleSignInAuthentication.idToken).thenReturn('321');
+
+      when(() => googleGetCredentials.credientials(
+          accessToken: '123', idToken: '321')).thenReturn(oAuthCredentials);
+
+      when(() => oAuthCredentials.accessToken).thenReturn('123');
+      when(() => oAuthCredentials.idToken).thenReturn('321');
+
+      when(() => auth.signInWithCredential(oAuthCredentials))
+          .thenThrow((_) async => Exception());
+
+      // ACOES
+      expect(() => firebaseAuthService.signInWithGoogle(),
+          throwsA(isA<SignInFailure>()));
+
+      verify(() => googleSignIn.signIn()).called(1);
     });
   });
 }
