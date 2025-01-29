@@ -2,15 +2,16 @@ import 'package:either_dart/either.dart';
 import 'package:financy_app/core/domain/entities/user_entity.dart';
 import 'package:financy_app/core/domain/failure.dart';
 import 'package:financy_app/core/domain/usecase.dart';
-import 'package:financy_app/modules/sign_in/domain/repositories/sign_in_repository.dart';
+import 'package:financy_app/modules/shared/domain/repositories/shared_remote_repository.dart';
 
-abstract class SignInWithFacebookUseCase
+abstract class SharedSignInWithFacebookUseCase
     implements UseCase<UserEntity, NoParams> {}
 
-class SignInWithFacebookUseCaseImpl implements SignInWithFacebookUseCase {
-  final SignInRepository repository;
+class SharedSignInWithFacebookUseCaseImpl
+    implements SharedSignInWithFacebookUseCase {
+  final SharedRemoteRepository repository;
 
-  SignInWithFacebookUseCaseImpl({required this.repository});
+  SharedSignInWithFacebookUseCaseImpl({required this.repository});
 
   @override
   Future<Either<Failure, UserEntity>> call(NoParams params) async {

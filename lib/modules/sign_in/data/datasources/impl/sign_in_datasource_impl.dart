@@ -15,14 +15,4 @@ class SignInDatasourceImpl implements SignInDatasource {
       password: request.password,
     );
   }
-
-  @override
-  Future<UserModel> signInWithFacebook() async {
-    return await authService.signInWithFacebook();
-  }
-
-  @override
-  Future<UserModel> signInWithGoogle() async {
-    return await authService.signInWithGoogle();
-  }
 }

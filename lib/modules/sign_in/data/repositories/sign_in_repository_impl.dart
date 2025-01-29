@@ -29,34 +29,4 @@ class SignInRepositoryImpl implements SignInRepository {
       return Left(UnexpectedFailure(msg: e.toString()));
     }
   }
-
-  @override
-  Future<Either<Failure, UserEntity>> signInWithFacebook() async {
-    try {
-      if (!(await networkInfo.isConnected)) return Left(NoConnection());
-
-      final result = await datasource.signInWithFacebook();
-
-      return Right(result);
-    } on Failure catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(UnexpectedFailure(msg: e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, UserEntity>> signInWithGoogle() async {
-    try {
-      if (!(await networkInfo.isConnected)) return Left(NoConnection());
-
-      final result = await datasource.signInWithGoogle();
-
-      return Right(result);
-    } on Failure catch (e) {
-      return Left(e);
-    } catch (e) {
-      return Left(UnexpectedFailure(msg: e.toString()));
-    }
-  }
 }

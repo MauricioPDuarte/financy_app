@@ -6,8 +6,8 @@ import 'package:financy_app/modules/box/box_routes.dart';
 import 'package:financy_app/modules/shared/domain/usecases/shared_set_logged_user_usecase.dart';
 import 'package:financy_app/modules/sign_in/domain/entities/request_sign_in_entity.dart';
 import 'package:financy_app/modules/sign_in/domain/usecases/sign_in_usecase.dart';
-import 'package:financy_app/modules/sign_in/domain/usecases/sign_in_with_facebook_usecase.dart';
-import 'package:financy_app/modules/sign_in/domain/usecases/sign_in_with_google_usecase.dart';
+import 'package:financy_app/modules/shared/domain/usecases/shared_sign_in_with_facebook_usecase.dart';
+import 'package:financy_app/modules/shared/domain/usecases/shared_sign_in_with_google_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -26,8 +26,8 @@ abstract class SignInController {
 
 class SignInControllerImpl implements SignInController {
   final SignInUseCase signInUseCase;
-  final SignInWithFacebookUseCase signInWithFacebookUseCase;
-  final SignInWithGoogleUseCase signInWithGoogleUseCase;
+  final SharedSignInWithFacebookUseCase signInWithFacebookUseCase;
+  final SharedSignInWithGoogleUseCase signInWithGoogleUseCase;
   final SharedSetLoggedUserUsecase setLoggedUserUsecase;
 
   SignInControllerImpl({

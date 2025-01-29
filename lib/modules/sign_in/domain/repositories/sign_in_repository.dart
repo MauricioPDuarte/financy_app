@@ -5,6 +5,4 @@ import 'package:financy_app/modules/sign_in/domain/entities/request_sign_in_enti
 
 abstract class SignInRepository {
   Future<Either<Failure, UserEntity>> signIn(RequestSignInEntity request);
-  Future<Either<Failure, UserEntity>> signInWithFacebook();
-  Future<Either<Failure, UserEntity>> signInWithGoogle();
 }

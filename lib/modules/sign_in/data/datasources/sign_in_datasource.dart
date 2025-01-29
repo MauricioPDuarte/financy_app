@@ -3,6 +3,4 @@ import 'package:financy_app/modules/sign_in/data/models/request_sign_in_model.da
 
 abstract class SignInDatasource {
   Future<UserModel> signIn(RequestSignInModel request);
-  Future<UserModel> signInWithFacebook();
-  Future<UserModel> signInWithGoogle();
 }
